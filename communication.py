@@ -3,15 +3,17 @@ import zmq
 
 context = zmq.Context()
 socket_in = context.socket(zmq.SUB)
-socket_out= context.socket(zmq.PUB)
-socket_in.bind("tcp://*:5577")
-socket_out.bind("tcp://localhost:5578")
-
+socket_out = context.socket(zmq.PUB)
+socket_in.connect("tcp://localhost:5577")
+socket_out.bind("tcp://*:5578")
+topicfilter = b""
+socket_in.setsockopt(zmq.SUBSCRIBE, topicfilter)
 
 while True:
+    print("Hi")
     #  Wait for next request from client
-    message = socket_in.recv()
-    # print("Received request: %s" % message)
+    message = socket_in.recv_string()
+    #print("Received request: %s" % message)
     print(message)
 
     #  Do some 'work'
