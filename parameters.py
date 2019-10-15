@@ -1,4 +1,4 @@
-import numpy as  np
+import numpy as np
 
 class Parameters1:
 
@@ -6,8 +6,8 @@ class Parameters1:
     m = 0.2
     a = 0.3
     b = 2
-    l = 0.5 * b
-    I = 0.067
+    length = 0.5 * b
+    inertia = 0.067
     ft = 0.02
     fr = 0.0067
     T = 0.01
@@ -16,3 +16,10 @@ class Parameters1:
     # goal_set  = np.array([1,0,0,0,-np.pi * 0.5,0])
     # initial state
     x0 = np.array([0, 0, 0, 0, 0, 0])
+    # weigh matrix
+    w1 = 1e5
+    w2 = 1
+    w3 = 40
+    w4 = 1
+    P = np.diag([w1, w1, w2, w2, w3, w4])
+    H = 50
