@@ -8,10 +8,10 @@ socket_in.connect("tcp://localhost:5577")
 socket_out.bind("tcp://*:5578")
 topicfilter = b""
 socket_in.setsockopt(zmq.SUBSCRIBE, topicfilter)
-
+#while True:
 while True:
-    print("Hi")
     #  Wait for next request from client
+    print("Start")
     message = socket_in.recv_string()
     #print("Received request: %s" % message)
     print(message)
@@ -21,3 +21,7 @@ while True:
 
     #  Send reply back to client
     socket_out.send(b"World")
+
+
+
+
