@@ -24,7 +24,6 @@ class Communication:
 
 
 ######### For calling the functions from the classes ################
-
 while True:
     #  Wait for next request from client
     # print("Start")
