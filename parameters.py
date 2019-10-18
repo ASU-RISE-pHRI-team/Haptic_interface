@@ -3,6 +3,8 @@ import numpy as np
 class Parameters1:
 
     # System dynamic parameters
+    num_player = 2
+    dim_state = 6
     m = 0.2
     a = 0.3
     b = 2
@@ -23,3 +25,5 @@ class Parameters1:
     w4 = 1
     P = np.diag([w1, w1, w2, w2, w3, w4])
     H = 50
+    theta1 = 1
+    theta2 = 1
