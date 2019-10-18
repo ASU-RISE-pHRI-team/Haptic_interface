@@ -59,6 +59,6 @@ class Optimalagent:
         P = self.num
         r = np.array([])
         for i in range(P):
-            r.append(np.ones(N))
+            np.append(r, np.ones(N))
         R = np.diag(r)
         return R
