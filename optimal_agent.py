@@ -15,7 +15,11 @@ class Optimalagent:
         self.action_set = []
         self.goal = constants.goal
         self.T = constants.T
-
+        self.P = constants.P
+        self.N = constants.dim_state
+        self.num = constants.num_player
+        self.theta1 = constants.theta1
+        self.theta2 = constants.theta2
 
     def sys_gen(self):
         theta = self.state[4]
@@ -35,4 +39,26 @@ class Optimalagent:
         new_state = np.multiply(A, old_state) + np.multiply(u1, B1) + np.multiply(u2, B2)
         return new_state
 
-    def
+    def optimal_action(self, A, B1, B2):
+        P = self.P
+        B = np.hstack((B1, B2))
+        BP = np.matmul(B.transpose(), P)
+        BPB = np.matmul(BP, P)
+        R = self.thetatoR(self.theta1, self.theta2)
+        if np.linalg.det(R+BPB) == 0:
+            u = np.array([0, 0])
+        inv = np.invert(R+BPB)
+        res1 = np.matmul(P, A)
+        res2 = np.matmul(B.transpose(), res1)
+        u = -np.matmul(inv, res2)
+        return u
+
+
+    def thetatoR(self, theta1, theta2):
+        N = self.N
+        P = self.num
+        r = np.array([])
+        for i in range(P):
+            np.append(r, np.ones(N))
+        R = np.diag(r)
+        return R
