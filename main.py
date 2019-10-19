@@ -2,6 +2,7 @@ from Communication import Communication
 from datetime import datetime
 
 
+
 print('Start')
 communicator = Communication()
 while True:
