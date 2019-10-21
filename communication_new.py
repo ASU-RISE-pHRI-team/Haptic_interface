@@ -1,6 +1,8 @@
 import zmq
 import numpy as np
 import json
+import math as m
+
 
 class Communication:
 
@@ -21,10 +23,19 @@ class Communication:
         #  Send reply back to client
         self.socket_out.send_string(data)
 
+    def translate(self):
+        msg = Communication.rec(self)
+        jmsg = json.loads(msg)
+        jr = jmsg["Rotation"]
+        theta = jr[1]
+        p = np.array([m.cos(theta), 0, m.sin(theta)])
+        jw = jmsg["Angularvelocity"]
+        jv = jmsg["Velocity"]
+        r = np.array(jr)
+        w = np.array(jw)
+        v = np.array(jv)
+        v_req = v - np.cross(p, w)
+        return v_req
+    # def msg2state(self, msg):
 
-    #def msg2state(self, msg):
-
-
-
-
-     #   return state
+    #   return state
