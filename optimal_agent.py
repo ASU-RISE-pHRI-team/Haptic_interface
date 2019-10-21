@@ -47,10 +47,11 @@ class Optimalagent:
         R = self.thetatoR(self.theta1, self.theta2)
         if np.linalg.det(R+BPB) == 0:
             u = np.array([0, 0])
-        inv = np.invert(R+BPB)
-        res1 = np.matmul(P, A)
-        res2 = np.matmul(B.transpose(), res1)
-        u = -np.matmul(inv, res2)
+        else:
+            inv = np.invert(R+BPB)
+            res1 = np.matmul(P, A)
+            res2 = np.matmul(B.transpose(), res1)
+            u = -np.matmul(inv, res2)
         return u
 
 
@@ -62,3 +63,7 @@ class Optimalagent:
             np.append(r, np.ones(N))
         R = np.diag(r)
         return R
+
+    def state_reg(self, world_state, goal):
+        regulator_state = world_state - goal
+        return regulator_state
