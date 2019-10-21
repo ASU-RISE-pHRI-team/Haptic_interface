@@ -1,5 +1,6 @@
 import zmq
-
+import numpy as np
+import json
 
 class Communication:
 
@@ -21,4 +22,9 @@ class Communication:
         self.socket_out.send_string(data)
 
 
+    #def msg2state(self, msg):
 
+
+
+
+     #   return state
