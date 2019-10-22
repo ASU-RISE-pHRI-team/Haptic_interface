@@ -1,38 +1,36 @@
-from communication_new import Communication
+import get_forces
 from datetime import datetime
 from optimal_agent import Optimalagent
-import json
 import time
-import math as m
-import numpy as np
+import get_location
 
 print('Start')
-communicator = Communication()
+communicator_1 = get_location.Communication()
+communicator_2 = get_forces.Communication()
 # controller = Optimalagent()
 T = 0.05
 while True:
     t1 = time.time()
-    message = communicator.rec()
-    print(message)
+    message_1 = communicator_1.rec()
+    message_2 = communicator_2.rec()
+    print(message_1)
+    print(message_2)
     # current date and time
     now = datetime.now().isoformat(timespec='microseconds')
     print("timestamp =", now)
     # timestamp = datetime.timestamp(now)
     # print("timestamp =", timestamp)
-    communicator.send(message)
-    # jmsg = json.loads(message)
-    # jr = jmsg["Rotation"]
-    # theta = jr[1]
-    # p = np.array([m.cos(theta), 0, m.sin(theta)])
-    # jw = jmsg["Angularvelocity"]
-    # jv = jmsg["Velocity"]
-    # r = np.array(jr)
-    # w = np.array(jw)
-    # v = np.array(jv)
-    # v_req = v - np.cross(p, w)
-    v_req = communicator.translate()
-    print("Velocity of block =", v_req)
+    communicator_1.send(message_1)
+    communicator_2.send(message_2)
+
+    pos, rot, vel, r_vel = communicator_1.translate()
+    print("Position of the block =", pos)
+    print("Velocity of the block =", vel)
+    print("Angular position of the block =", rot)
+    print("Angular velocity of the block =", r_vel)
+
     t2 = time.time()
+
     # if t2 - t1 > 0:
-    #     print(T - (t2-t1))
+    #     print(T - (t2 - t1))
     #     time.sleep(T - (t2 - t1))
