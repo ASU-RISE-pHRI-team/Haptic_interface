@@ -14,7 +14,7 @@ class Forces:
         self.socket_in = context.socket(zmq.SUB)
         self.socket_out = context.socket(zmq.PUB)
         self.socket_in.connect("tcp://localhost:5557")
-        self.socket_out.bind("tcp://:5511")
+        self.socket_out.bind("tcp://*:5558")
 
     def rec(self):
         topic_filter = b""
@@ -24,7 +24,7 @@ class Forces:
 
     def send(self, data):
         #  Send reply back to client
-        self.socket_out.send_string(data)
+        self.socket_out.send_json(data)
 
 
 print('Start')
@@ -48,10 +48,10 @@ while True:
     # print("timestamp =", now)
     # timestamp = datetime.timestamp(now)
     # print("timestamp =", timestamp)
-    # my_msg = {"force_x": -10.0, "force_y": 0, "force_z": 0}
-    # data_out = json.dumps(my_msg)
-    # data_out = 'Hello'
-    # communicator_3.send(data_out)
+    my_msg = {"force_x": -10.0, "force_y": 0, "force_z": 0}
+    data_out = json.dumps(my_msg)
+    #data_out = 'Hello'
+    communicator_3.send(data_out)
     # print('Hi')
     pos, rot, vel, r_vel = communicator_1.translate()
     # print("Position of the block =", pos)

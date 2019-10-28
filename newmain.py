@@ -1,94 +1,90 @@
-import get_location
-import zmq
-import time
 import threading
+import zmq
 import json
 import numpy as np
+import time
 
 
-class Receiver:
+class Communication:
 
     def __init__(self):
-        self.port = "5557"
-        self.context = zmq.Context()
-        self.socket = self.context.socket(zmq.SUB)
-        self.subport = "5527"
-        self.contextsub = zmq.Context()
-        self.subsocket = self.contextsub.socket(zmq.SUB)
-        self.receive_thread = threading.Thread(target=self.recvdata)
+        self.context1 = zmq.Context()
+        self.context2 = zmq.Context()
+        self.context3 = zmq.Context()
+        self.socket_in1 = self.context1.socket(zmq.SUB)
+        self.socket_in2 = self.context2.socket(zmq.SUB)
+        self.socket_out = self.context3.socket(zmq.PUB)
+        self.rec_1 = threading.Thread(target=self.rec1)
+        self.rec_2 = threading.Thread(target=self.rec2)
+        self.sender = threading.Thread(target=self.send)
         self.quad_thread = threading.Thread(target=self.run_sth)
-
-    def setup_comm(self):
-        self.socket.bind("tcp://localhost*:%s" % self.port)
-
         self.quad_thread.daemon = True
+        self.a = 1
+        self.forces = 0
+        self.loc = 0
+        self.pos = 0
+        self.r = 0
+        self.v = 0
+        self.w = 0
+        self.msg = {"force_x": -10.0, "force_y": 0, "force_z": 0}
 
-        # self.receive_thread = threading.Thread(target=self.recvdata)
-        # self.quad_thread = threading.Thread(target=self.run_sth)
-        # self.quad_thread.daemon = True
-
-    def recvdata(self):
+    def rec1(self):
+        self.socket_in1.connect("tcp://localhost:5571")
         topic_filter = b""
-        self.subsocket.setsockopt(zmq.SUBSCRIBE, topic_filter)
-        self.subsocket.connect("tcp://localhost:5527")
+        self.socket_in1.setsockopt(zmq.SUBSCRIBE, topic_filter)
         while True:
-            data = self.subsocket.recv_string()
-            jmsg = json.loads(data)
-            jr = jmsg["Rotation"]
-            jp = jmsg["Position"]
-            jw = jmsg["Angularvelocity"]
-            jv = jmsg["Velocity"]
-            pos = np.array(jp)
-            r = np.array(jr)
-            w = np.array(jw)
-            v = np.array(jv)
-            return pos, r, w, v
+            self.forces = self.socket_in1.recv_string()
+            print(self.forces)
+
+    def rec2(self):
+        self.socket_in2.connect("tcp://localhost:5572")
+        topic_filter = b""
+        self.socket_in2.setsockopt(zmq.SUBSCRIBE, topic_filter)
+        while True:
+            self.loc = self.socket_in2.recv_string()
+            print(self.loc)
+
+    def send(self):
+        self.socket_out.bind("tcp://*:5558")
+        while True:
+            message = json.dumps(self.msg)
+            self.socket_out.send_json(message)
+
+    def runner1(self):
+        self.rec_1.start()
+
+    def runner2(self):
+        self.rec_2.start()
+
+    def my_sender(self):
+        self.send()
 
     def run_sth(self):
-        pass
-
-    def runsub(self):
-        self.receive_thread.start()
+        while True:
+            self.a = self.a + 1
 
     def run(self):
         self.quad_thread.start()
 
-    def recv_data(self):
-        topic_filter = b""
-        self.socket.setsockopt(zmq.SUBSCRIBE, topic_filter)
-        msg = self.socket.recv_string()
-        return msg
-
-    def my_recvr(self):
-        self.run()
-        self.runsub()
-        while True:
-            val = self.recv_data()
-            return val
-
-
-class Sender:
-    def __init__(self):
-        self.newcontext = zmq.Context()
-        self.socket_out = self.newcontext.socket(zmq.PUB)
-        self.socket_out.bind("tcp://*:5578")
-
-    def send(self, data):
-        #  Send reply back to client
-        self.socket_out.send_string(data)
+    def translate(self):
+        jmsg = json.loads(self.loc)
+        jr = jmsg["Rotation"]
+        jp = jmsg["Position"]
+        jw = jmsg["Angularvelocity"]
+        jv = jmsg["Velocity"]
+        self.pos = np.array(jp)
+        self.r = np.array(jr)
+        self.w = np.array(jw)
+        self.v = np.array(jv)
+        return self.pos, self.r, self.v, self.w
 
 
 def main():
-    player = Receiver()
-    s_player = Sender()
-
-    while True:
-        msg1 = player.my_recvr()
-        print(msg1)
-        pos, rot, vel, r_vel = player.recvdata()
-        print(pos, rot, vel, r_vel)
-    # data = 'Hello'
-    # s_player.send(data)
+    kim = Communication()
+    kim.run()
+    kim.runner1()
+    kim.runner2()
+    kim.my_sender()
 
 
 if __name__ == '__main__':
