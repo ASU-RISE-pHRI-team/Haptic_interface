@@ -29,7 +29,7 @@ class Communication:
         self.msg = {"force_x": -10.0, "force_y": 0, "force_z": 0}
 
     def rec1(self):
-        self.socket_in1.connect("tcp://localhost:5571")
+        self.socket_in1.connect("tcp://localhost:5557")
         topic_filter = b""
         self.socket_in1.setsockopt(zmq.SUBSCRIBE, topic_filter)
         while True:
@@ -37,17 +37,17 @@ class Communication:
             print(self.forces)
 
     def rec2(self):
-        self.socket_in2.connect("tcp://localhost:5572")
+        self.socket_in2.connect("tcp://localhost:5527")
         topic_filter = b""
         self.socket_in2.setsockopt(zmq.SUBSCRIBE, topic_filter)
         while True:
             self.loc = self.socket_in2.recv_string()
             print(self.loc)
 
-    def send(self):
-        self.socket_out.bind("tcp://*:5558")
+    def send(self, msg):
+        self.socket_out.bind("tcp://*:5572")
         while True:
-            message = json.dumps(self.msg)
+            message = json.dumps(msg)
             self.socket_out.send_json(message)
 
     def runner1(self):
@@ -56,8 +56,8 @@ class Communication:
     def runner2(self):
         self.rec_2.start()
 
-    def my_sender(self):
-        self.send()
+    def my_sender(self, message):
+        self.send(message)
 
     def run_sth(self):
         while True:
@@ -84,7 +84,7 @@ def main():
     kim.run()
     kim.runner1()
     kim.runner2()
-    kim.my_sender()
+    kim.my_sender(kim.forces)
 
 
 if __name__ == '__main__':

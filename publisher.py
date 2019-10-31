@@ -7,7 +7,16 @@ class Communication:
     def __init__(self):
         self.context = zmq.Context()
         self.socket_out = self.context.socket(zmq.PUB)
-        self.socket_out.bind("tcp://*:5571")
+        self.socket_out.bind("tcp://*:5572")
+        # self.context = zmq.Context()
+        # self.socket_in = self.context.socket(zmq.SUB)
+        # self.socket_in.connect("tcp://localhost:5557")
+
+    # def rec(self):
+    #     topic_filter = b""
+    #     self.socket_in.setsockopt(zmq.SUBSCRIBE, topic_filter)
+    #     msg = self.socket_in.recv_string()
+    #     return msg
 
     def send(self, msg):
         #  Send reply back to client
@@ -17,7 +26,8 @@ class Communication:
 def main():
     mac = Communication()
     while True:
-        my_msg = {"force_x": -10.0, "force_y": 0, "force_z": 0}
+        # data = mac.rec()
+        my_msg = {"force_x": -5.0, "force_y": 0, "force_z": 0}
         data = json.dumps(my_msg)
         mac.send(data)
 
