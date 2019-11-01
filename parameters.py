@@ -1,7 +1,7 @@
 import numpy as np
 
-class Parameters1:
 
+class Parameters1:
     # System dynamic parameters
     num_player = 2
     dim_state = 6
@@ -14,10 +14,10 @@ class Parameters1:
     fr = 0.0067
     T = 0.01
     # goal position
-    goal = np.array([1, 0, 0, 0, -np.pi * 0.5, 0])
+    x0 = np.array([1, 0, 0, 0, np.pi * 0.5, 0])
     # goal_set  = np.array([1,0,0,0,-np.pi * 0.5,0])
     # initial state
-    x0 = np.array([0, 0, 0, 0, 0, 0])
+    goal = np.array([0, 0, 0, 0, 0, 0])
     # weigh matrix
     w1 = 1e5
     w2 = 1

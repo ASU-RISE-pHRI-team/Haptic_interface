@@ -16,12 +16,12 @@ class Communication:
         self.socket_out = self.context3.socket(zmq.PUB)
         self.rec_1 = threading.Thread(target=self.rec1)
         self.rec_2 = threading.Thread(target=self.rec2)
-        self.socket_out.bind("tcp://*:5571")
-       # self.sender = threading.Thread(target=self.send)
+        self.socket_out.bind("tcp://*:7001")
+        self.send = threading.Thread(target=self.my_sender)
         self.quad_thread = threading.Thread(target=self.run_sth)
         self.quad_thread.daemon = True
         self.a = 1
-        self.forces = {"force_x": 5.0, "force_y": 0, "force_z": 0}
+        self.forces = {"force_x": 0, "force_y": 0, "force_z": 0}
         self.loc = 0
         self.pos = 0
         self.r = 0
@@ -48,20 +48,22 @@ class Communication:
             self.loc = self.socket_in2.recv_string()
             print(self.loc)
 
-    def send(self, msg):
-        # while True:
-        #     #message = json.dumps(msg)
-        self.socket_out.send_string(msg)
-        # print(msg)
-
     def runner1(self):
         self.rec_1.start()
 
     def runner2(self):
         self.rec_2.start()
 
-  #  def my_sender(self, msg):
-  #      self.send(msg)
+    def my_sender(self):
+        while True:
+            t1 = time.time()
+            msg_dic = self.forces
+            msg_json = json.dumps(msg_dic)
+            self.socket_out.send_string(msg_json)
+            print(msg_json)
+            t2 = time.time()
+            if t2 - t1 - 0.05 < 0:
+                time.sleep(0.05 - t2 + t1)
 
     def run_sth(self):
         while True:
@@ -69,6 +71,9 @@ class Communication:
 
     def run(self):
         self.quad_thread.start()
+
+    def sender(self):
+        self.send.start()
 
     def translate(self):
         jmsg = json.loads(self.loc)
@@ -87,18 +92,8 @@ def main():
     kim = Communication()
     kim.run()
     kim.runner1()
-    # kim.runner2()
-    while True:
-        t1 = time.time()
-        msg_dic = kim.forces
-        msg_json = json.dumps(msg_dic)
-        kim.send(msg_json)
-        t2 = time.time()
-        if t2 - t1 - 0.05 > 0:
-            time.sleep(t2-t1-0.05)
-
-
-
+    kim.runner2()
+    kim.sender()
 
 
 if __name__ == '__main__':

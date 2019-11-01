@@ -92,7 +92,11 @@ class Optimalagent:
         norm2 = (np.linalg.norm(u2)) ^ 2
         theta1_hat_new = - np.matmul(B1.transpose() * u1, res3) / norm1
         theta2_hat_new = - np.matmul(B2.transpose() * u2, res3) / norm2
-
-
-
         return theta1_hat_new, theta2_hat_new
+
+
+    def data_append(self, x, otheraction):
+        self.state = x
+        self.state_set.append(x)
+        self.other_action = otheraction
+        self.other_action_set.append(otheraction)
