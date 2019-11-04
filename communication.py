@@ -7,8 +7,6 @@ from optimal_agent import Optimalagent
 from parameters import Parameters1
 
 
-
-
 class Communication:
 
     def __init__(self):
@@ -47,7 +45,7 @@ class Communication:
             self.forces = json.loads(forces)
 
             # self.forces =
-            #print(self.forces)
+            # print(self.forces)
 
     def rec2(self):
 
@@ -89,7 +87,7 @@ class Communication:
         # self.r = np.array(jr)
         # self.w = np.array(jw)
         # self.v = np.array(jv)
-        self.state = np.array([jp[0], jp[2], jv[0], jv[2], jr[1]/180*np.pi, jw[1]])
+        self.state = np.array([jp[0], jp[2], jv[0], jv[2], jr[1] / 180 * np.pi, jw[1]])
         self.observed_action = self.forces["force_x"]
 
         # return self.pos, self.r, self.v, self.w
@@ -99,8 +97,6 @@ class Communication:
         msg = {"force_x": action, "force_y": 0, "force_z": 0}
 
         return msg
-
-
 
 
 def main():
@@ -118,14 +114,12 @@ def main():
         kim.translate()
         agent.state = kim.state
         agent.other_action = kim.observed_action
-        A, B1, B2 = agent.sysgen()
+        A, B1, B2 = agent.sys_gen()
         U = agent.optimal_action(A, B1, B2)
         msg = kim.msg_gen(U[0])
         msg_json = json.dumps(msg)
-
-
-        print(msg_json)
-        # print(msg_json)
+        kim.send(msg_json)
+        # agent.agentlearning(A, B1, B2, U[0], kim.observed_action)
         t2 = time.time()
         if t2 - t1 - 0.05 < 0:
             time.sleep(0.05 - t2 + t1)

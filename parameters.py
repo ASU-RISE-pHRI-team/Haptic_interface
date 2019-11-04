@@ -5,6 +5,7 @@ class Parameters1:
     # System dynamic parameters
     num_player = 2
     dim_state = 6
+    dim_input = 1
     m = 0.2
     a = 0.3
     b = 2
@@ -12,16 +13,16 @@ class Parameters1:
     inertia = 0.067
     ft = 0.02
     fr = 0.0067
-    T = 0.01
+    T = 0.05
     # goal position
-    x0 = np.array([1, 0, 0, 0, np.pi * 0.5, 0])
+    x0 = np.array([1, 0, 0, 0, 0, 0])
     # goal_set  = np.array([1,0,0,0,-np.pi * 0.5,0])
     # initial state
     goal = np.array([0, 0, 0, 0, 0, 0])
     # weigh matrix
     w1 = 1e5
     w2 = 1
-    w3 = 40
+    w3 = 1e3
     w4 = 1
     P = np.diag([w1, w1, w2, w2, w3, w4])
     H = 50

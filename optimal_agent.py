@@ -19,6 +19,7 @@ class Optimalagent:
         self.T = constants.T
         self.P = constants.P
         self.N = constants.dim_state
+        self.r = constants.dim_input
         self.num = constants.num_player
         self.theta1 = constants.theta1
         self.theta2 = constants.theta2
@@ -49,7 +50,8 @@ class Optimalagent:
         P = self.P
         B = np.hstack((B1, B2))
         BP = np.matmul(B.transpose(), P)
-        BPB = np.matmul(BP, P)
+        BPB = np.matmul(BP, B)
+
         R = self.thetator(self.theta1, self.theta2)
         if np.linalg.det(R + BPB) == 0:
             u = np.array([0, 0])
@@ -57,16 +59,17 @@ class Optimalagent:
             inv = np.linalg.inv(R + BPB)
             res1 = np.matmul(P, A)
             res2 = np.matmul(B.transpose(), res1)
-            u = -np.matmul(inv, res2)
+            res3 = np.matmul(res2, self.state)
+            u = -np.matmul(inv, res3)
         return u
 
     def thetator(self, theta1, theta2):
-        N = self.N
+        N = self.r
         P = self.num
         theta = np.array([theta1, theta2])
         r = np.array([])
         for i in range(P):
-            np.append(r, np.ones(N) * theta[i])
+            r = np.append(r, np.ones(N) * theta[i])
         R = np.diag(r)
         return R
 
@@ -80,7 +83,7 @@ class Optimalagent:
         P = self.P
         B = np.hstack((B1, B2))
         BP = np.matmul(B.transpose(), P)
-        BPB = np.matmul(BP, P)
+        BPB = np.matmul(BP, B)
         R_hat = self.thetator(self.theta1_hat, self.theta2_hat)
         inv = np.linalg.inv(R_hat + BPB)
         res1 = np.matmul(inv, BP)
@@ -93,7 +96,6 @@ class Optimalagent:
         theta1_hat_new = - np.matmul(B1.transpose() * u1, res3) / norm1
         theta2_hat_new = - np.matmul(B2.transpose() * u2, res3) / norm2
         return theta1_hat_new, theta2_hat_new
-
 
     def data_append(self, x, otheraction):
         self.state = x
