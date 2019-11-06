@@ -93,8 +93,12 @@ class Communication:
         # return self.pos, self.r, self.v, self.w
 
     def msg_gen(self, action):
+        if len(action) == 1:
 
-        msg = {"force_x": action, "force_y": 0, "force_z": 0}
+            msg = {"force_x": action, "force_y": 0, "force_z": 0}
+        elif len(action) == 2:
+
+            msg = {"force_x": action[0], "force_y": 0, "force_z": -action[1]}
 
         return msg
 
@@ -116,7 +120,8 @@ def main():
         agent.other_action = kim.observed_action
         A, B1, B2 = agent.sys_gen()
         U = agent.optimal_action(A, B1, B2)
-        msg = kim.msg_gen(U[0])
+        ur = agent.input_g2o(U[2:4])
+        msg = kim.msg_gen(ur)
         msg_json = json.dumps(msg)
         kim.send(msg_json)
         # agent.agentlearning(A, B1, B2, U[0], kim.observed_action)

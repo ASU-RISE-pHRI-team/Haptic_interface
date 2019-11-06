@@ -35,10 +35,12 @@ class Optimalagent:
         l = self.length
         I = self.I
         A = np.array(
-            [[1, 0, T, 0, 0, 0], [0, 1, 0, T, 0, 0], [0, 0, (1 - cfr1 / M), 0, 0, 0], [0, 0, 0, (1 - cfr1 / M), 0, 0],
-             [0, 0, 0, 0, 1, T], [0, 0, 0, 0, 0, 1 - cfr2 / I]])
-        B1 = np.array([[0], [0], [np.cos(theta) * T / M], [np.cos(theta) * T / M], [0], [T * l / I]])
-        B2 = np.array([[0], [0], [np.cos(theta) * T / M], [np.cos(theta) * T / M], [0], [-T * l / I]])
+            [[1, 0, T, 0, 0, 0], [0, 1, 0, T, 0, 0], [0, 0, (1 - cfr1 / M), 0, 0, 0], [0, 0, 0, (1 - cfr1 / M), 0, 0], [0, 0, 0, 0, 1, T], [0, 0, 0, 0, 0, 1 - cfr2 / I]])
+        # B1 = np.array([[0], [0], [np.cos(theta) * T / M], [np.cos(theta) * T / M], [0], [T * l / I]])
+        # B2 = np.array([[0], [0], [np.cos(theta) * T / M], [np.cos(theta) * T / M], [0], [-T * l / I]])
+        B1 = np.array([[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [np.sin(theta) * T * l / I, np.cos(theta) * T * l / I]])
+        B2 = np.array([[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [-np.sin(theta) * T * l / I, -np.cos(theta) * T * l / I]])
+
         return A, B1, B2
 
     def state_update(self, A, B1, B2, u1, u2):
@@ -102,3 +104,8 @@ class Optimalagent:
         self.state_set.append(x)
         self.other_action = otheraction
         self.other_action_set.append(otheraction)
+
+    def input_g2o(self, action):
+        theta = self.state[4]
+        local_action = np.array([np.cos(theta) * action[0] + np.sin(theta) * action[1], np.sin(theta) * action[0] + np.cos(theta) * action[1]])
+        return local_action

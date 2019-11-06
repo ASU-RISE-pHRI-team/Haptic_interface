@@ -5,7 +5,7 @@ class Parameters1:
     # System dynamic parameters
     num_player = 2
     dim_state = 6
-    dim_input = 1
+    dim_input = 2
     m = 0.2
     a = 0.3
     b = 2
