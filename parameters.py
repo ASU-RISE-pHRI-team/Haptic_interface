@@ -26,5 +26,5 @@ class Parameters1:
     w4 = 1
     P = np.diag([w1, w1, w2, w2, w3, w4])
     H = 50
-    theta1 = 1
+    theta1 = 1e-3
     theta2 = 1

@@ -45,7 +45,7 @@ class Optimalagent:
 
     def state_update(self, A, B1, B2, u1, u2):
         old_state = self.state
-        new_state = np.multiply(A, old_state) + np.multiply(u1, B1) + np.multiply(u2, B2)
+        new_state = np.dot(A, old_state) + np.dot(B1, u1) + np.dot(B2, u2)
         return new_state
 
     def optimal_action(self, A, B1, B2):
@@ -91,13 +91,18 @@ class Optimalagent:
         res1 = np.matmul(inv, BP)
         res2 = np.matmul(res1, A)
         Uhat = np.matmul(res2, x)
-        xhat = self.state_update(A, B1, B2, Uhat[0] - u1, Uhat[1] - u2)
-        res3 = np.matmul(P, xhat)
-        norm1 = (np.linalg.norm(u1)) ^ 2
-        norm2 = (np.linalg.norm(u2)) ^ 2
-        theta1_hat_new = - np.matmul(B1.transpose() * u1, res3) / norm1
-        theta2_hat_new = - np.matmul(B2.transpose() * u2, res3) / norm2
-        return theta1_hat_new, theta2_hat_new
+        xhat1 = self.state_update(A, B1, B2, Uhat[0:2] - u1, Uhat[2:4])
+        xhat2 = self.state_update(A, B1, B2, Uhat[0:2], Uhat[2:4] - u2)
+        res3_p1 = np.dot(P, xhat1)
+        res3_p2 = np.dot(P, xhat2)
+        norm1 = (np.linalg.norm(u1)) ** 2
+        norm2 = (np.linalg.norm(u2)) ** 2
+        theta1_hat_new = - np.dot(np.dot(B1, u1), res3_p1) / norm1
+        theta2_hat_new = - np.dot(np.dot(B2, u2), res3_p2) / norm2
+
+        self.theta1_hat = theta1_hat_new
+        self.theta2_hat = theta2_hat_new
+
 
     def data_append(self, x, otheraction):
         self.state = x

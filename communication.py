@@ -88,7 +88,7 @@ class Communication:
         # self.w = np.array(jw)
         # self.v = np.array(jv)
         self.state = np.array([jp[0], jp[2], jv[0], jv[2], jr[1] / 180 * np.pi, jw[1]])
-        self.observed_action = self.forces["force_x"]
+        self.observed_action = np.array([self.forces["force_x"], -self.forces["force_z"]])
 
         # return self.pos, self.r, self.v, self.w
 
@@ -124,7 +124,9 @@ def main():
         msg = kim.msg_gen(ur)
         msg_json = json.dumps(msg)
         kim.send(msg_json)
-        # agent.agentlearning(A, B1, B2, U[0], kim.observed_action)
+        agent.agentlearning(A, B1, B2, ur, kim.observed_action)
+        print(agent.theta1_hat)
+        print(agent.theta2_hat)
         t2 = time.time()
         if t2 - t1 - 0.05 < 0:
             time.sleep(0.05 - t2 + t1)
