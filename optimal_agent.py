@@ -23,8 +23,8 @@ class Optimalagent:
         self.num = constants.num_player
         self.theta1 = constants.theta1
         self.theta2 = constants.theta2
-        self.theta1_hat = 1
-        self.theta2_hat = 1
+        self.theta1_hat = 1e-3
+        self.theta2_hat = 1e-3
 
     def sys_gen(self):
         theta = self.state[4]
@@ -35,11 +35,11 @@ class Optimalagent:
         l = self.length
         I = self.I
         A = np.array(
-            [[1, 0, T, 0, 0, 0], [0, 1, 0, T, 0, 0], [0, 0, (1 - cfr1 / M), 0, 0, 0], [0, 0, 0, (1 - cfr1 / M), 0, 0], [0, 0, 0, 0, 1, T], [0, 0, 0, 0, 0, 1 - cfr2 / I]])
+            [[1, 0, T, 0, 0, 0], [0, 1, 0, T, 0, 0], [0, 0, (1 - cfr1*T / M), 0, 0, 0], [0, 0, 0, (1 - cfr1*T / M), 0, 0], [0, 0, 0, 0, 1, T], [0, 0, 0, 0, 0, (1 - cfr2 * T / I)]])
         # B1 = np.array([[0], [0], [np.cos(theta) * T / M], [np.cos(theta) * T / M], [0], [T * l / I]])
         # B2 = np.array([[0], [0], [np.cos(theta) * T / M], [np.cos(theta) * T / M], [0], [-T * l / I]])
-        B1 = np.array([[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [np.sin(theta) * T * l / I, np.cos(theta) * T * l / I]])
-        B2 = np.array([[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [-np.sin(theta) * T * l / I, -np.cos(theta) * T * l / I]])
+        B1 = np.array([[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [np.sin(theta) * T * l / I, -np.cos(theta) * T * l / I]])
+        B2 = np.array([[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [-np.sin(theta) * T * l / I, np.cos(theta) * T * l / I]])
 
         return A, B1, B2
 
@@ -54,7 +54,7 @@ class Optimalagent:
         BP = np.matmul(B.transpose(), P)
         BPB = np.matmul(BP, B)
 
-        R = self.thetator(self.theta1, self.theta2)
+        R = self.thetator(self.theta1, self.theta1)
         if np.linalg.det(R + BPB) == 0:
             u = np.array([0, 0])
         else:
@@ -64,6 +64,30 @@ class Optimalagent:
             res3 = np.matmul(res2, self.state)
             u = -np.matmul(inv, res3)
         return u
+
+    def blame_all(self, A, B1, B2):
+        P = self.P
+        B = np.hstack((B1, B2))
+        BP = np.matmul(B.transpose(), P)
+        BPB = np.matmul(BP, B)
+        R_hat = self.thetator(self.theta1_hat, self.theta2_hat)
+        H1 = np.diag(np.diag(BPB)) + self.thetator(self.theta1, self.theta2)
+        # H1 = np.diag(np.diag(BPB)) + R_hat
+        H2 = BPB - H1
+
+
+        inv = np.linalg.inv(R_hat + BPB)
+        res1 = np.matmul(P, A)
+        res2 = np.matmul(B.transpose(), res1)
+        res3 = np.matmul(res2, self.state)
+        u_hat = -np.matmul(inv, res3)
+        P1 = - np.matmul(np.linalg.inv(H1), res3)
+        P2 = -np.matmul(np.linalg.inv(H1), H2)
+        u = P1 + np.matmul(P2, u_hat)
+        return u
+
+
+
 
     def thetator(self, theta1, theta2):
         N = self.r
@@ -110,7 +134,12 @@ class Optimalagent:
         self.other_action = otheraction
         self.other_action_set.append(otheraction)
 
-    def input_g2o(self, action):
-        theta = self.state[4]
-        local_action = np.array([np.cos(theta) * action[0] + np.sin(theta) * action[1], np.sin(theta) * action[0] + np.cos(theta) * action[1]])
+    def input_o2g(self, action):
+        theta = self.state[4] + 0.5 * np.pi
+        local_action = np.array([np.cos(theta) * action[0] + -np.sin(theta) * action[1], np.sin(theta) * action[0] + np.cos(theta) * action[1]])
         return local_action
+
+    def input_g2o(self, action):
+        theta = - (self.state[4] + 0.5 * np.pi)
+        global_action = np.array([np.cos(theta) * action[0] + -np.sin(theta) * action[1], np.sin(theta) * action[0] + np.cos(theta) * action[1]])
+        return global_action
