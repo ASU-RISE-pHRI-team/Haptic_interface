@@ -112,11 +112,13 @@ def main():
     kim.runner2()
     time.sleep(3)
     print(kim.state)
+    state_set = [kim.state]
     while True:
         t1 = time.time()
         kim.translate()
         agent.state = kim.state
         kim.state_set.append(kim.state)
+        state_set.append(kim.state)
         print(agent.state)
         msg1 = {"force_x": -5.0, "force_y": 0, "force_z": 0}
         msg2 = {"force_x": -5.0, "force_y": 0, "force_z": 0}
