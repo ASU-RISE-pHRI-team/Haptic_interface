@@ -21,8 +21,9 @@ class Communication:
         self.socket_out2 = self.context4.socket(zmq.PUB)  # pallavi
         self.socket_in1.connect("tcp://127.0.0.1:5557")
         self.socket_in2.connect("tcp://127.0.0.1:5527")
-        self.socket_out1.bind("tcp://127.0.0.1:7001")
-        self.socket_out2.bind("tcp://127.0.0.1:7003")  # pallavi
+
+        self.socket_out1.bind("tcp://127.0.0.1:8000")
+        self.socket_out2.bind("tcp://127.0.0.1:8001")  # pallavi
 
         self.rec_1 = threading.Thread(target=self.rec1)
         self.rec_2 = threading.Thread(target=self.rec2)
@@ -117,8 +118,8 @@ def main():
         agent.state = kim.state
         kim.state_set.append(kim.state)
         print(agent.state)
-        msg1 = {"force_x": -2.0, "force_y": 0, "force_z": 0}
-        msg2 = {"force_x": -2.0, "force_y": 0, "force_z": 0}
+        msg1 = {"force_x": -5.0, "force_y": 0, "force_z": 0}
+        msg2 = {"force_x": -5.0, "force_y": 0, "force_z": 0}
         msg1_json = json.dumps(msg1)
         msg2_json = json.dumps(msg2)  # pallavi
         kim.my_sender(msg2_json)  # pallavi

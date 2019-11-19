@@ -141,6 +141,7 @@ def main():
         msg1 = kim.msg_gen(ur)
         msg2 = kim.msg_gen(uh)       #pallavi
         msg1_json = json.dumps(msg1)
+
         msg2_json = json.dumps(msg2) #pallavi
         # print(msg_json)
         kim.my_sender(msg2_json)    #pallavi
