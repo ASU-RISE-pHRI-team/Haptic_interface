@@ -10,7 +10,8 @@ from communication import Communication
 
 
 def main():
-    global agent = Optimalagent(Parameters1)
+    global agent
+    agent = Optimalagent(Parameters1)
     try:
 
         kim = Communication()
