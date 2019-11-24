@@ -35,11 +35,14 @@ class Optimalagent:
         l = self.length
         I = self.I
         A = np.array(
-            [[1, 0, T, 0, 0, 0], [0, 1, 0, T, 0, 0], [0, 0, (1 - cfr1*T / M), 0, 0, 0], [0, 0, 0, (1 - cfr1*T / M), 0, 0], [0, 0, 0, 0, 1, T], [0, 0, 0, 0, 0, (1 - cfr2 * T / I)]])
+            [[1, 0, T, 0, 0, 0], [0, 1, 0, T, 0, 0], [0, 0, (1 - cfr1 * T / M), 0, 0, 0],
+             [0, 0, 0, (1 - cfr1 * T / M), 0, 0], [0, 0, 0, 0, 1, T], [0, 0, 0, 0, 0, (1 - cfr2 * T / I)]])
         # B1 = np.array([[0], [0], [np.cos(theta) * T / M], [np.cos(theta) * T / M], [0], [T * l / I]])
         # B2 = np.array([[0], [0], [np.cos(theta) * T / M], [np.cos(theta) * T / M], [0], [-T * l / I]])
-        B1 = np.array([[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [np.sin(theta) * T * l / I, -np.cos(theta) * T * l / I]])
-        B2 = np.array([[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [-np.sin(theta) * T * l / I, np.cos(theta) * T * l / I]])
+        B1 = np.array(
+            [[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [np.sin(theta) * T * l / I, -np.cos(theta) * T * l / I]])
+        B2 = np.array(
+            [[0, 0], [0, 0], [T / M, 0], [0, T / M], [0, 0], [-np.sin(theta) * T * l / I, np.cos(theta) * T * l / I]])
 
         return A, B1, B2
 
@@ -75,7 +78,6 @@ class Optimalagent:
         # H1 = np.diag(np.diag(BPB)) + R_hat
         H2 = BPB - H1
 
-
         inv = np.linalg.inv(R_hat + BPB)
         res1 = np.matmul(P, A)
         res2 = np.matmul(B.transpose(), res1)
@@ -85,9 +87,6 @@ class Optimalagent:
         P2 = -np.matmul(np.linalg.inv(H1), H2)
         u = P1 + np.matmul(P2, u_hat)
         return u
-
-
-
 
     def thetator(self, theta1, theta2):
         N = self.r
@@ -99,8 +98,8 @@ class Optimalagent:
         R = np.diag(r)
         return R
 
-    def state_reg(self, world_state, goal):
-        regulator_state = world_state - goal
+    def state_reg(self, world_state):
+        regulator_state = world_state - self.goal
         return regulator_state
 
     def agentlearning(self, A, B1, B2, u1, u2):
@@ -127,19 +126,21 @@ class Optimalagent:
         self.theta1_hat = theta1_hat_new
         self.theta2_hat = theta2_hat_new
 
-
-    def data_append(self, x, otheraction):
+    def data_append(self, x, other_action):
         self.state = x
         self.state_set.append(x)
-        self.other_action = otheraction
-        self.other_action_set.append(otheraction)
+        self.other_action = other_action
+        self.other_action_set.append(other_action)
+        self.action_set.append(self.action)
 
     def input_o2g(self, action):
         theta = self.state[4] + 0.5 * np.pi
-        local_action = np.array([np.cos(theta) * action[0] + -np.sin(theta) * action[1], np.sin(theta) * action[0] + np.cos(theta) * action[1]])
+        local_action = np.array([np.cos(theta) * action[0] + -np.sin(theta) * action[1],
+                                 np.sin(theta) * action[0] + np.cos(theta) * action[1]])
         return local_action
 
     def input_g2o(self, action):
         theta = - (self.state[4] + 0.5 * np.pi)
-        global_action = np.array([np.cos(theta) * action[0] + -np.sin(theta) * action[1], np.sin(theta) * action[0] + np.cos(theta) * action[1]])
+        global_action = np.array([np.cos(theta) * action[0] + -np.sin(theta) * action[1],
+                                  np.sin(theta) * action[0] + np.cos(theta) * action[1]])
         return global_action
