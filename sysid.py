@@ -20,8 +20,8 @@ def main():
         time.sleep(3)
         print(kim.state)
         state_set = [kim.state]
-        action_1 = -5
-        action_2 = -5
+        action_1 = 0
+        action_2 = 0
  
         while True:
             t1 = time.time()
@@ -44,7 +44,7 @@ def main():
                 time.sleep(Parameters1.T - t2 + t1)
     except KeyboardInterrupt:
 
-        np.savetxt("trans_high.csv", agent.state_set, delimiter=",")
+        np.savetxt("trans_zero.csv", agent.state_set, delimiter=",")
 
 
 if __name__ == '__main__':
