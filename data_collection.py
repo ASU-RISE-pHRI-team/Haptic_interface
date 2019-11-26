@@ -19,8 +19,8 @@ class Rec_data:
         self.socket_in2 = self.context2.socket(zmq.SUB)
      #  self.socket_out1 = self.context3.socket(zmq.PUB)
      #  self.socket_out2 = self.context4.socket(zmq.PUB)  # pallavi
-        self.socket_in1.connect("tcp://127.0.0.1:5557")
-        self.socket_in2.connect("tcp://127.0.0.1:5527")
+        self.socket_in1.connect("tcp://localhost:1500")
+        self.socket_in2.connect("tcp://localhost:1503")
         #   self.socket_out1.bind("tcp://127.0.0.1:8000")
         #   self.socket_out2.bind("tcp://127.0.0.1:8001") #pallavi
 
@@ -30,7 +30,7 @@ class Rec_data:
         # self.sender = threading.Thread(target=self.send)
         self.quad_thread = threading.Thread(target=self.run_sth)
         self.quad_thread.daemon = True
-        self.forces = {"force_x": -5.0, "force_y": 0, "force_z": 0}
+        self.forces = {"force_x": 0, "force_y": 0, "force_z": 0}
         self.loc = 0
         # self.pos = 0
         # self.r = 0
@@ -49,7 +49,7 @@ class Rec_data:
             self.forces = json.loads(forces)
 
             # self.forces =
-            # print(self.forces)
+            #print(self.forces)
 
     def rec2(self):
 
@@ -120,7 +120,7 @@ def main():
         kim.runner1()
         kim.runner2()
         time.sleep(3)
-        print(kim.state)
+        #print(kim.state)
         state_set = [kim.state]
         action_1 = -1.0
         action_2 = 1.0
@@ -130,7 +130,7 @@ def main():
             kim.translate()
             agent.state = kim.state
 
-            print(agent.state)
+            print(kim.observed_action)
 
             t2 = time.time()
             agent.data_append(kim.state, kim.observed_action)
