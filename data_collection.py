@@ -19,8 +19,8 @@ class Rec_data:
         self.socket_in2 = self.context2.socket(zmq.SUB)
      #  self.socket_out1 = self.context3.socket(zmq.PUB)
      #  self.socket_out2 = self.context4.socket(zmq.PUB)  # pallavi
-        self.socket_in1.connect("tcp://localhost:1500")
-        self.socket_in2.connect("tcp://localhost:1503")
+        self.socket_in1.connect("tcp://localhost:1501")
+        self.socket_in2.connect("tcp://localhost:1502")
         #   self.socket_out1.bind("tcp://127.0.0.1:8000")
         #   self.socket_out2.bind("tcp://127.0.0.1:8001") #pallavi
 
@@ -57,7 +57,7 @@ class Rec_data:
         self.socket_in2.setsockopt(zmq.SUBSCRIBE, topic_filter)
         while True:
             self.loc = self.socket_in2.recv_string()
-            # print(self.loc)
+            #print(self.loc)
 
     def my_sender(self, msg):  # pallavi
         self.socket_out2.send_string(msg)
@@ -133,13 +133,14 @@ def main():
             print(kim.observed_action)
 
             t2 = time.time()
-            agent.data_append(kim.state, kim.observed_action)
+            agent.data_append(kim.state, kim.observed_action, t2)
             if t2 - t1 - Parameters1.T < 0:
                 time.sleep(Parameters1.T - t2 + t1)
     except KeyboardInterrupt:
 
         np.savetxt("state.csv", agent.state_set, delimiter=",")
-        np.savetxt("action_h1.csv", agent.other_action_set, delimiter=",")
+        np.savetxt("action_h2.csv", agent.other_action_set, delimiter=",")
+        np.savetxt("h2_time.csv", agent.timer, delimiter=",")
 
 
 if __name__ == '__main__':
