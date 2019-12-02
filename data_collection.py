@@ -17,8 +17,8 @@ class Rec_data:
         self.context4 = zmq.Context()
         self.socket_in1 = self.context1.socket(zmq.SUB)
         self.socket_in2 = self.context2.socket(zmq.SUB)
-     #  self.socket_out1 = self.context3.socket(zmq.PUB)
-     #  self.socket_out2 = self.context4.socket(zmq.PUB)  # pallavi
+        #  self.socket_out1 = self.context3.socket(zmq.PUB)
+        #  self.socket_out2 = self.context4.socket(zmq.PUB)  # pallavi
         self.socket_in1.connect("tcp://localhost:1500")
         self.socket_in2.connect("tcp://localhost:1503")
         #   self.socket_out1.bind("tcp://127.0.0.1:8000")
@@ -39,6 +39,7 @@ class Rec_data:
         self.state = Parameters1.x0
         self.msg = {"force_x": -10.0, "force_y": 0, "force_z": 0}
         self.observed_action = []
+        self.other_action = []
 
     def rec1(self):
 
@@ -49,7 +50,7 @@ class Rec_data:
             self.forces = json.loads(forces)
 
             # self.forces =
-            #print(self.forces)
+            # print(self.forces)
 
     def rec2(self):
 
@@ -112,15 +113,16 @@ class Rec_data:
 
 def main():
     global agent
+    global kim
     agent = Optimalagent(Parameters1)
+    kim = Rec_data()
     try:
 
-        kim = Rec_data()
         kim.run()
         kim.runner1()
         kim.runner2()
         time.sleep(3)
-        #print(kim.state)
+        # print(kim.state)
         state_set = [kim.state]
         action_1 = -1.0
         action_2 = 1.0
@@ -133,13 +135,14 @@ def main():
             print(kim.observed_action)
 
             t2 = time.time()
-            agent.data_append(kim.state, kim.observed_action)
+            agent.data_append(kim.state, kim.observed_action, t2)
             if t2 - t1 - Parameters1.T < 0:
                 time.sleep(Parameters1.T - t2 + t1)
     except KeyboardInterrupt:
 
         np.savetxt("state.csv", agent.state_set, delimiter=",")
         np.savetxt("action_h1.csv", agent.other_action_set, delimiter=",")
+        np.savetxt("time_h1.csv", agent.timer, delimiter=",")
 
 
 if __name__ == '__main__':
