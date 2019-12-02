@@ -20,8 +20,8 @@ def main():
         time.sleep(3)
         print(kim.state)
         state_set = [kim.state]
-        action_1 = 0
-        action_2 = 0
+        action_1 = -5
+        action_2 = 5
  
         while True:
             t1 = time.time()
