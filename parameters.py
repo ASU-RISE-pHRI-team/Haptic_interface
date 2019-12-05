@@ -13,7 +13,7 @@ class Parameters1:
     inertia = 0.067
     ft = 0.02
     fr = 0.0067
-    T = 0.1
+    T = 0.04  #0.1
     # goal position
     x0 = np.array([0, 4, 0, 0, 0, 0])
     # goal_set  = np.array([1,0,0,0,-np.pi * 0.5,0])

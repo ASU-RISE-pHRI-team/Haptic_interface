@@ -26,6 +26,8 @@ class Optimalagent:
         self.theta1_hat = 1e-3
         self.theta2_hat = 1e-3
         self.timer = []
+        self.reaction = []
+        self.reaction_set = []
 
     def sys_gen(self):
         theta = self.state[4]
@@ -127,12 +129,14 @@ class Optimalagent:
         self.theta1_hat = theta1_hat_new
         self.theta2_hat = theta2_hat_new
 
-    def data_append(self, x, other_action, time):
+    def data_append(self, x, other_action, reaction, time):
         self.state = x
         self.state_set.append(x)
         self.other_action = other_action
+        self.reaction = reaction
         self.other_action_set.append(other_action)
         self.action_set.append(self.action)
+        self.reaction_set.append(self.reaction)
         self.timer.append(time)
 
     def input_o2g(self, action):
