@@ -1,48 +1,60 @@
 clear
 
 x=[];F=[];
-x(:,1)=[4;10;0;0;-pi/2;0];
+x(:,1)=[0;4;0;0;0;0];
 v(1)=0;
 % agent 1: teacher; agent 2: student
 sys=loadsys(2);
 N=sys.N;
 theta=sys.theta;
-
-
-BPB=sys.B'*sys.P*sys.B;
-H_1_list=[];
-for i=1:sum(sys.nu)
-H_1_list=[H_1_list;BPB(i,i)];
-end
-H_2=BPB-diag(H_1_list);
-Acl=eye(sys.nx)-sys.B*inv(H_2)*sys.B'*sys.P;
-eig(eye(N*3)-sys.B*inv(H_2)*sys.B'*sys.P)
+M = 0.2; % mass of the object
+a = 0.3; % width of the object
+b = 2; %lenth of the object
+I = 0.067;
+l = b/2;
+T = 0.1;
+cfr1 = 0.2;
+cfr2 = 0.067;
+% 
+% BPB=sys.B'*sys.P*sys.B;
+% H_1_list=[];
+% for i=1:sum(sys.nu)
+% H_1_list=[H_1_list;BPB(i,i)];
+% end
+% H_2=BPB-diag(H_1_list);
+% Acl=eye(sys.nx)-sys.B*inv(H_2)*sys.B'*sys.P;
+% eig(eye(N*3)-sys.B*inv(H_2)*sys.B'*sys.P)
 
 %%
 thetahat=[];
-thetahat(:,1)=[1;1];
+thetahat(:,1)=[1e-3;1e-3];
 thetahat1=[];
-thetahat1(:,1)=[1;1];
+thetahat1(:,1)=[1e-3;1e-3];
 thetahat2=[];
-thetahat2(:,1)=[1;1];
-len=50;
+thetahat2(:,1)=[1e-3;1e-3];
+len=500;
 strategy1=2; % agent one is Blame-All
-strategy2=1; % agent two is Blame-Me
+strategy2=2; % agent two is Blame-Me
 
 R= thetatoR(sys.theta,sys.nu,sys.N);
 
 
-dt=0.2;
+dt= T;
 for i=1:len-1
     %sys.A=[x(1,i)+x(2,i)*dt;x(2,i)-dt*(0.1*x(2,i))];
-    sys.A=[x(1:2,i)+x(3:4,i)*dt;x(3:4,i)-dt*(0.1*x(3:4,i));x(5,i)+dt*x(6,i);x(6,i)-dt*(0.1*x(6,i))];
-    sys.B(6,:)=[sin(x(5,i)) -cos(x(5,i)) -sin(x(5,i)) cos(x(5,i))].*3;
+    theta = x(5);
+    fr_1 = eye(2)*(1-(cfr1/M)*T);
+    fr_2 = 1 - cfr2*T/I;    
+    sys.A=[eye(2),T*eye(2),zeros(2); zeros(2), fr_1,zeros(2); 0, 0, 0, 0, 1, T; 0, 0, 0, 0, 0, fr_2];
+    B1 = [0, 0;0, 0;T/M, 0;0, T/M;0, 0;sin(theta)*T*l/I, -cos(theta)*T*l/I];
+    B2 =[0, 0;0, 0;T/M, 0;0, T/M;0, 0;-sin(theta)*T*l/I, cos(theta)*T*l/I];
+    sys.B = [B1,B2];
     F2(:,i)= agent_control(thetahat2(:,i),x(:,i),sys,strategy2);
     F1(:,i) = agent_control(thetahat1(:,i),x(:,i),sys,strategy1);
     %K=-inv(R+sys.B'*sys.P*sys.B)*sys.B'*sys.P;
     F(:,i) = [F1(1:2,i);F2(3:4,i)];
     %F(:,i)=K*sys.A;
-    x(:,i+1)=sys.A+sys.B*F(:,i);
+    x(:,i+1)=sys.A * x(:,i)+sys.B*F(:,i);
     x(5,i+1)=mod(x(5,i+1)+pi,2*pi)-pi;
     %x(:,i+1)=Acl*x(:,i);
     thetahat1(:,i+1)=agent_learning(thetahat1(:,i),F(:,i),x(:,i),x(:,i+1),sys,strategy1);
