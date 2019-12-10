@@ -13,8 +13,8 @@ class Rec_data:
     def __init__(self):
         self.context1 = zmq.Context()
         self.context2 = zmq.Context()
-        self.context3 = zmq.Context()
-        self.context4 = zmq.Context()
+        # self.context3 = zmq.Context()
+        # self.context4 = zmq.Context()
         self.context5 = zmq.Context()
         self.socket_in1 = self.context1.socket(zmq.SUB)
         self.socket_in2 = self.context2.socket(zmq.SUB)
@@ -23,7 +23,7 @@ class Rec_data:
         #  self.socket_out2 = self.context4.socket(zmq.PUB)  # pallavi
         self.socket_in1.connect("tcp://localhost:1500")
         self.socket_in2.connect("tcp://localhost:1503")
-        self.socket_in3.connect("tcp://10.203.53.193:1501")
+        self.socket_in3.connect("tcp://10.203.52.192:1501")
         #   self.socket_out1.bind("tcp://127.0.0.1:8000")
         #   self.socket_out2.bind("tcp://127.0.0.1:8001") #pallavi
 
@@ -46,7 +46,7 @@ class Rec_data:
         self.observed_action = []
         self.other_action = []
         self.reaction = []
-        self.time_limit = 30
+        self.time_limit = 20
 
     def rec1(self):
         topic_filter = b""
@@ -90,6 +90,7 @@ class Rec_data:
 
     def runner3(self):
         self.rec_3.start()
+
     #  def my_sender(self, msg):
     #      self.send(msg)
 

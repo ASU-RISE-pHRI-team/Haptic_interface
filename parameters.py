@@ -15,10 +15,10 @@ class Parameters1:
     fr = 0.0067
     T = 0.04  #0.1
     # goal position
-    x0 = np.array([0, 4, 0, 0, 0, 0])
+    x0 = np.array([0, 1, 0, 0, 0, 0])
     # goal_set  = np.array([1,0,0,0,-np.pi * 0.5,0])
     # initial state
-    goal = np.array([0, 0, 0, 0, 0, 0])
+    goal = np.array([0, 0, 0, 0, -0.785, 0])
     # weigh matrix
     w1 = 1e5
     w2 = 1
