@@ -1,0 +1,42 @@
+Instruction manual for the Experiment conduction:
+***************************************************************************
+                         Values to be fixed:
+***************************************************************************
+In Unity:
+
+1. Static Friction = 0, dynamic friction = 0
+
+2. For the rigidbody (payload), 
+mass = 0.5, drag = 5, angular drag = 5, y position should always be = 0.05
+
+3. For the rigidbody (HIP1 and HIP),
+mass = 0.1, drag = 5, angular drag = 0 
+***************************************************************************
+With respect to the client and server properties:
+
+1. All addresses are the IP address of the host, except the ip address for pub_disc_comm() in the the client's C++ code. The ip address there (for publishing the data) should be the ip address of the server. The ip address in the python code for socket_in3 should also be the ip address of the client machine.
+2. Falcon ids in C# and C++ should be, 1 for host and 2 for client.
+3. isClient should be, True if not host and False if host.
+4. In the python code, data_collection.py, self.time_limit can be adjusted according to, how many seconds the experiment is to be conducted.
+5. Frequency can be changed changing T in parameters.py. T = 1/(required frequency)
+
+***********************************************************************************
+Steps to run the experiment and take the readings:
+1. Play the Unity scene, HostScene in the server machine
+2. Play the Unity scene, HostScene in the client machine
+3. Start the Falcon with the C++ code, falcon_client in apps for the server.
+4. Start the Falcon with the C++ code, falcon_client in apps for the client.
+5. In the server machine, run the data_collection.py script in the terminal. After 30 seconds, the script stops collecting data. press Ctrl+C twice. Store the action_h1.csv, action_h2.csv, state.csv, time_h1.csv in the required folder. These files will be generated in PycharmProjects/Haptic_interface/
+
+While stopping,
+1. Stop the python code
+2. Stop the server's unity scene
+3. Stop the client's unity scene
+4. Stop the server's Falcon
+5. Stop the client's Falcon
+
+*********************************************************************************
+
+In case something stops running and you are not able to debug, you may request JJ for help.
+
+
