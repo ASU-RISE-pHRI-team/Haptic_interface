@@ -1,0 +1,43 @@
+******************************************************************************************************************
+Read me for Data-4
+******************************************************************************************************************
+Frequency of data collection = 25 Hz
+
+Time limit = 20 seconds
+******************************************************************************************************************
+
+For the first 5 sets, we conducted first translation+rotation then translation and then rotation in each set.
+After this, we conducted 5 trials of translation+rotation, 5 trials of translation and 5 trials of rotation.
+The files are arranged as follows:
+******************************************************************************************************************
+
+set_1, set_2, set_3, set_4, set_5 contains data for the same start and goal positions as below. 
+After set_5 data was collected in the following manner.
+******************************************************************************************************************
+
+Translation:
+start position = [0, 2, 0, 0, 0]
+goal position = [0, 0, 0, 0, 0]
+
+Trials:
+Trial6 to Trial10
+
+******************************************************************************************************************
+
+Rotation:
+start position = [0, 0, 0, 0, 0]
+goal position = [0, 0, 0, -90, 0]
+
+Trials:
+Trial11 to Trial15
+
+******************************************************************************************************************
+
+Translation + Rotation:
+start position = [0, 2, 0, 0, 0]
+goal position = [0, 0, 0, -90, 0]
+
+Trials:
+Trial1 to Trial5
+
+******************************************************************************************************************
