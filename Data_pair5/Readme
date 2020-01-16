@@ -5,6 +5,15 @@ Frequency of data collection = 25 Hz
 
 Time limit = 20 seconds
 *****************************************************************************************************************
+For this pair, the participants were first asked to perform 10 rounds of translation+rotation, then 10 rounds of
+translation and then 10 rounds of rotation
+******************************************************************************************************************
+Translation + Rotation:
+start position = [0, 2, 0, 0, 0]
+goal position = [0, 0, 0, -90, 0]
+
+Trials:
+Trial1 to Trial10
 
 ******************************************************************************************************************
 
@@ -13,7 +22,7 @@ start position = [0, 2, 0, 0, 0]
 goal position = [0, 0, 0, 0, 0]
 
 Trials:
-Trial6 to Trial10
+Trial11 to Trial20
 
 ******************************************************************************************************************
 
@@ -22,15 +31,6 @@ start position = [0, 0, 0, 0, 0]
 goal position = [0, 0, 0, -90, 0]
 
 Trials:
-Trial11 to Trial15
-
-******************************************************************************************************************
-
-Translation + Rotation:
-start position = [0, 2, 0, 0, 0]
-goal position = [0, 0, 0, -90, 0]
-
-Trials:
-Trial1 to Trial10
+Trial21 to Trial30
 
 ******************************************************************************************************************
