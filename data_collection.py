@@ -46,7 +46,7 @@ class Rec_data:
         self.observed_action = []
         self.other_action = []
         self.reaction = []
-        self.time_limit = 20
+        self.time_limit = 30
 
     def rec1(self):
         topic_filter = b""
@@ -112,8 +112,8 @@ class Rec_data:
         else:
             angle = jr[1]
         self.state = np.array([jp[0], jp[2], jv[0], jv[2], -angle / 180 * np.pi, -jw[1]])
-        self.observed_action = np.array([self.forces["force_x"], -self.forces["force_x_discrete"]])
-        self.reaction = np.array([self.other_forces["force_x"], -self.other_forces["force_x_discrete"]])
+        self.observed_action = np.array([self.forces["force_x"], self.forces["force_x_discrete"]])
+        self.reaction = np.array([self.other_forces["force_x"], self.other_forces["force_x_discrete"]])
         # return self.pos, self.r, self.v, self.w
 
     def msg_gen(self, action):
