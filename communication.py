@@ -18,10 +18,14 @@ class Communication:
         self.socket_in2 = self.context2.socket(zmq.SUB)
         self.socket_out1 = self.context3.socket(zmq.PUB)
         self.socket_out2 = self.context4.socket(zmq.PUB) #pallavi000
-        self.socket_in1.connect("tcp://127.0.0.1:5557")
-        self.socket_in2.connect("tcp://127.0.0.1:5527")
-        self.socket_out1.bind("tcp://127.0.0.1:8000")
-        self.socket_out2.bind("tcp://127.0.0.1:8001") #pallavi
+        #self.socket_in1.connect("tcp://127.0.0.1:5557")
+        #self.socket_in2.connect("tcp://127.0.0.1:5527")
+        #self.socket_out1.bind("tcp://127.0.0.1:8000")
+        #self.socket_out2.bind("tcp://127.0.0.1:8001")
+        self.socket_in1.connect("tcp://localhost:5557")
+        self.socket_in2.connect("tcp://localhost:5527")
+        self.socket_out1.bind("tcp://127.0.0.1:8001")
+        self.socket_out2.bind("tcp://127.0.0.1:8002") #pallavi
 
         self.rec_1 = threading.Thread(target=self.rec1)
         self.rec_2 = threading.Thread(target=self.rec2)

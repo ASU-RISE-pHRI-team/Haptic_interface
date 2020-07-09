@@ -6,6 +6,7 @@ import time
 from optimal_agent import Optimalagent
 from parameters import Parameters1
 from communication import Communication
+import os
 
 
 class Rec_data:
@@ -21,9 +22,9 @@ class Rec_data:
         self.socket_in3 = self.context5.socket(zmq.SUB)
         #  self.socket_out1 = self.context3.socket(zmq.PUB)
         #  self.socket_out2 = self.context4.socket(zmq.PUB)  # pallavi
-        self.socket_in1.connect("tcp://localhost:1500")
-        self.socket_in2.connect("tcp://localhost:1503")
-        self.socket_in3.connect("tcp://10.203.52.192:1501")
+        self.socket_in1.connect("tcp://192.168.1.4:1500")
+        self.socket_in2.connect("tcp://192.168.1.4:1503")
+        self.socket_in3.connect("tcp://192.168.1.2:1501")
         #   self.socket_out1.bind("tcp://127.0.0.1:8000")
         #   self.socket_out2.bind("tcp://127.0.0.1:8001") #pallavi
 
@@ -46,7 +47,7 @@ class Rec_data:
         self.observed_action = []
         self.other_action = []
         self.reaction = []
-        self.time_limit = 30
+        self.time_limit = 23
 
     def rec1(self):
         topic_filter = b""
@@ -54,7 +55,6 @@ class Rec_data:
         while True:
             forces = self.socket_in1.recv_string()
             self.forces = json.loads(forces)
-
             # self.forces =
             # print(self.forces)
 
@@ -143,7 +143,7 @@ def main():
     state_set = [kim.state]
     action_1 = -1.0
     action_2 = 1.0
-
+    os.system('spd-say "start "')
     while m < kim.time_limit:
         t1 = time.time()
         kim.translate()
@@ -157,11 +157,14 @@ def main():
         m = int(t2 - k)
         if t2 - t1 - Parameters1.T < 0:
             time.sleep(Parameters1.T - t2 + t1)
+    os.system('spd-say "stop "')
 
-    np.savetxt("state.csv", agent.state_set, delimiter=",")
-    np.savetxt("action_h1.csv", agent.other_action_set, delimiter=",")
-    np.savetxt("action_h2.csv", agent.reaction_set, delimiter=",")
-    np.savetxt("time_h1.csv", agent.timer, delimiter=",")
+
+    addr = "/home/rise/PycharmProjects/Haptic_interface/data_collection/sysidnew/large_medium_same_recent/"
+    np.savetxt(addr+"state.csv", agent.state_set, delimiter=",")
+    np.savetxt(addr+"action_h1.csv", agent.other_action_set, delimiter=",")
+    np.savetxt(addr+"action_h2.csv", agent.reaction_set, delimiter=",")
+    np.savetxt(addr+"time.csv", agent.timer, delimiter=",")
 
 
 if __name__ == '__main__':

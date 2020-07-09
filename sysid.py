@@ -20,8 +20,8 @@ def main():
         time.sleep(3)
         print(kim.state)
         state_set = [kim.state]
-        action_1 = -5
-        action_2 = 5
+        action_1 = -2.1
+        action_2 = -2.1
  
         while True:
             t1 = time.time()
@@ -39,12 +39,12 @@ def main():
             kim.my_sender(msg2_json)  # pallavi
 
             t2 = time.time()
-            agent.data_append(kim.state, action_1)
+            agent.data_append(kim.state, action_1, action_2, t2)
             if t2 - t1 - Parameters1.T < 0:
                 time.sleep(Parameters1.T - t2 + t1)
     except KeyboardInterrupt:
 
-        np.savetxt("trans_zero.csv", agent.state_set, delimiter=",")
+        np.savetxt("rot_sysid.csv", agent.state_set, delimiter=",")
 
 
 if __name__ == '__main__':

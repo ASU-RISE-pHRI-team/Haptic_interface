@@ -140,9 +140,9 @@ def main():
                 time.sleep(Parameters1.T - t2 + t1)
     except KeyboardInterrupt:
 
-        np.savetxt("state.csv", agent.state_set, delimiter=",")
-        np.savetxt("action_h1.csv", agent.other_action_set, delimiter=",")
-        np.savetxt("time_h1.csv", agent.timer, delimiter=",")
+        np.savetxt("/home/rise/PycharmProjects/Haptic_interface/new_data/state.csv", agent.state_set, delimiter=",")
+        np.savetxt("/home/rise/PycharmProjects/Haptic_interface/new_data/action_h1.csv", agent.other_action_set, delimiter=",")
+        np.savetxt("/home/rise/PycharmProjects/Haptic_interface/new_data/time_h1.csv", agent.timer, delimiter=",")
 
 
 if __name__ == '__main__':
