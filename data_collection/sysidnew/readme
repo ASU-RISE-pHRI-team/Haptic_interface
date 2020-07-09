@@ -1,0 +1,5 @@
+################## Data cllection for small values##########################
+small_opp_1, small_opp_2 are for clockwise rotation
+i.e. player-1 pushes and player-2 pulls
+small_opp_anticlk_1 and small_opp_anticlk_2 are for anticlockwise rotation
+i.e. player-2 pushes and player-1 pulls
