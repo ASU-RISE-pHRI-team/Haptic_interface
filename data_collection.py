@@ -160,7 +160,7 @@ def main():
     os.system('spd-say "stop "')
 
 
-    addr = "/home/rise/PycharmProjects/Haptic_interface/data_collection/sysidnew/small_opp_new2/"
+    addr = "/home/rise/PycharmProjects/Haptic_interface/data_collection/sysidnew/small_opp_new/"
     np.savetxt(addr+"state.csv", agent.state_set, delimiter=",")
     np.savetxt(addr+"action_h1.csv", agent.other_action_set, delimiter=",")
     np.savetxt(addr+"action_h2.csv", agent.reaction_set, delimiter=",")
