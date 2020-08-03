@@ -24,7 +24,7 @@ class Rec_data:
         #  self.socket_out2 = self.context4.socket(zmq.PUB)  # pallavi
         self.socket_in1.connect("tcp://192.168.1.4:1500")
         self.socket_in2.connect("tcp://192.168.1.4:1503")
-        self.socket_in3.connect("tcp://192.168.1.2:1501")
+        self.socket_in3.connect("tcp://192.168.1.3:1501")
         #   self.socket_out1.bind("tcp://127.0.0.1:8000")
         #   self.socket_out2.bind("tcp://127.0.0.1:8001") #pallavi
 
@@ -47,7 +47,7 @@ class Rec_data:
         self.observed_action = []
         self.other_action = []
         self.reaction = []
-        self.time_limit = 23
+        self.time_limit = 53
 
     def rec1(self):
         topic_filter = b""
@@ -160,7 +160,7 @@ def main():
     os.system('spd-say "stop "')
 
 
-    addr = "/home/rise/PycharmProjects/Haptic_interface/data_collection/sysidnew/large_medium_same_recent/"
+    addr = "/home/rise/PycharmProjects/Haptic_interface/data_collection/sysidnew/small_opp_new2/"
     np.savetxt(addr+"state.csv", agent.state_set, delimiter=",")
     np.savetxt(addr+"action_h1.csv", agent.other_action_set, delimiter=",")
     np.savetxt(addr+"action_h2.csv", agent.reaction_set, delimiter=",")
